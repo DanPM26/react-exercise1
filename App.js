@@ -1,32 +1,28 @@
 import logo from './logo.svg';
+import axios from 'axios';
+import React, { useState,useEffect } from 'react';
 import './App.css';
-import React,{ useState } from 'react'
-import InputText from './components/inputext/InputText';
-import ColorInput from './components/ColorInput/ColorInput';
-import SizeInput from './components/SizeInput/SizeInput';
+import Cardquote from './components/Cardquote/Cardquote';
 
 function App() {
+   
+  const [frase,setfrase] = useState({}) 
 
-  const [text,setText] = useState('hola')
-  const [color,setColor] = useState('#00000') 
-  const [size,setSize] = useState('15')
-
-  const handleChange =(e) =>{
-    console.log(e.target.value)
-    setText(e.target.value)
+  const getQuotes = async() =>{
+    const url = 'https://breakingbadapi.com/api/quote/random'
+    const resp = await axios.get(url)
+    setfrase(resp.data[0])
+    console.log(resp.data[0])
   }
+  useEffect(()=>{
+    getQuotes()
+  }, [])
+  
 
   return (
     <div className="App">
-     <h1 style={{
-      color : color, 
-      fontSize: `${size}px`
-     }}>
-       {text}
-     </h1>
-     <ColorInput colorValue={setColor} />
-     <InputText textValue={setText} />
-     <SizeInput sizeValue={setSize} />
+      <Cardquote info={frase}></Cardquote>
+      <button onClick={() => getQuotes()}>Click for more!</button>
     </div>
   );
 }
